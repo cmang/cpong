@@ -21,8 +21,10 @@
 #include <err.h>
 #include <string.h>
 
+#include "score.h"
+
 #define NUMBALLS 3
-#define DEFDELAY 35
+#define DEFDELAY 75
 
 int maxline, maxcol, ch, c, edge, score, balls;
 char *player;
@@ -64,7 +66,7 @@ int endgame();
 /* BEGIN main() FUNCTION */
 int main(int argc, char *argv[])
 {
-    unsigned int delay = 35;
+    unsigned int delay = DEFDELAY;
     delay *= 1000;
     score = 0;
     balls = NUMBALLS;
@@ -84,11 +86,11 @@ int main(int argc, char *argv[])
                 break;
             case 'h':
                 printf("Pong by cmang\n");
-                (void)fprintf(stderr, "usage: pong [-d delay] [-b balls]\nDefault delay 35, default number of balls 3\n");
+                (void)fprintf(stderr, "usage: pong [-d delay] [-b balls]\nDefault delay %i, default number of balls 3\n", DEFDELAY);
                 exit(1);
             default:
                 printf("Pong by cmang\n");
-                (void)fprintf(stderr, "usage: pong [-d delay] [-b balls]\nDefault delay 35, default number of balls 3\n");
+                (void)fprintf(stderr, "usage: pong [-d delay] [-b balls]\nDefault delay %i, default number of balls 3\n", DEFDELAY);
                 exit(1);
         }
     initscr(); clear(); cbreak(); refresh();                        
@@ -170,7 +172,9 @@ int endgame()
 {
     nocbreak();
     endwin();
-    printf("\n%s quit with score of %d\n", player, score); 
+    printf("\n%s quit with score of %d.\n", player, score); 
+    if (testScore(score) == TRUE)
+        printf("A new high score!\n");
     free(player);
     exit(0);
 }
