@@ -183,6 +183,7 @@ int endgame()
         printf("A new high score!\n");
         printf("Please enter your name, or press Enter to use \"%s\": ", player);
         fflush(stdout);
+        fflush(stdin);
         //fgets(scoreplayer, 40, stdin);
         fscanf(stdin, "%s", scoreplayer);
         addScore(scoreplayer, score);
@@ -190,6 +191,7 @@ int endgame()
     }
     else printf("You did not acheive a high score.\n");
     printScores();
+    fflush(stdin);
     free(player);
     exit(0);
 }
