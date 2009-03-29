@@ -48,7 +48,11 @@ BOOL loadScores()
         fopen("scores.dat", "rw");
     }
     //else printf("Score file found.\n");
-    if (fp == NULL) perror("Error opening scores.dat."); 
+    if (fp == NULL)
+    {
+        perror("Error opening scores.dat."); 
+        return FALSE;
+    }
     else
     {
         for (ncount = 0; ncount < 10; ncount++)
@@ -60,8 +64,8 @@ BOOL loadScores()
             
             free(cusername);
         }
+        return TRUE;
     }
-    return TRUE;
 }
 
 BOOL printScores()
