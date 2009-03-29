@@ -12,15 +12,17 @@ typedef struct
     int score;
 } scoreEntry;
 
+BOOL loadScores();
+
 BOOL printScores();
 
 BOOL testScore(int score);
 
+BOOL sortScores();
+
 BOOL addScore(char *player, int score);
 
-BOOL makeBoard(void);
+BOOL saveScores();
 
-BOOL saveScore();
-
-BOOL sortScores();
+BOOL makeBoard();
 

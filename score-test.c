@@ -90,27 +90,27 @@ BOOL sortScores()
     char *cusername;
     BOOL pass;
 
-    pass = FALSE;
-    printf("Sorting scores.\n");
     // This should be done repeatedly until it goes through the entire list without
     // any re-ordering.  This is the sorter!
+    printf("Sorting scores.\n");
+    pass = FALSE;
     while (pass == FALSE)
     {
-        pass = TRUE;
+        pass = TRUE;    // If pass doesn't get set to FALSE, list is sorted
         for (ncount=9; ncount > 0; ncount--)
         {
             if (gameScore[ncount].score > gameScore[ncount-1].score) // If the lower score
             // is higher than the score above it, switch them around.
             {
-                cusername = malloc(sizeof(char)*80);
-                strncpy(cusername, gameScore[ncount].username, 39);
-                nscore = gameScore[ncount].score;
-                strncpy(gameScore[ncount].username, gameScore[ncount-1].username, 39);
-                gameScore[ncount].score = gameScore[ncount-1].score;
-                strncpy(gameScore[ncount-1].username, cusername, 39);
-                gameScore[ncount-1].score = nscore;
-                free(cusername);
-                pass = FALSE;
+                cusername = malloc(sizeof(char)*80);                // Make temp storage
+                strncpy(cusername, gameScore[ncount].username, 39); // low.name -> temp
+                nscore = gameScore[ncount].score;                   // low.score -> temp
+                strncpy(gameScore[ncount].username, gameScore[ncount-1].username, 39); // high.name -> low
+                gameScore[ncount].score = gameScore[ncount-1].score; // high.score -> low
+                strncpy(gameScore[ncount-1].username, cusername, 39); // temp.name -> high
+                gameScore[ncount-1].score = nscore;     // temp.score -> high
+                free(cusername);        // free temp storage
+                pass = FALSE;           // Try agian - might need further sorting.
             }
         }
     }
@@ -131,13 +131,13 @@ BOOL addScore(char *player, int score)
         gameScore[9].score = score;
         strncpy(gameScore[9].username, player, 39);
         sortScores();
-        saveScore();
+        saveScores();
         return TRUE;
     }
     else return FALSE;
 }
 
-BOOL saveScore()
+BOOL saveScores()
 {
     int ncount;
     printf("Writing to scores.dat.\n");

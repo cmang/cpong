@@ -171,16 +171,25 @@ int main(int argc, char *argv[])
 int endgame()
 {
     nocbreak();
+    //fflush(stdout);
+    refresh();
     endwin();
+    fflush(stdout);
+    loadScores();
     printf("\n%s quit with score of %d.\n", player, score); 
     if (testScore(score) == TRUE)       /* Score stuff.. test, add, etc. */
     {
         char scoreplayer[40];
         printf("A new high score!\n");
         printf("Please enter your name, or press Enter to use \"%s\": ", player);
-        fgets(scoreplayer, 40, stdin);
-        printf("%s %i\n", scoreplayer, score);
+        fflush(stdout);
+        //fgets(scoreplayer, 40, stdin);
+        fscanf(stdin, "%s", scoreplayer);
+        addScore(scoreplayer, score);
+        saveScores();
     }
+    else printf("You did not acheive a high score.\n");
+    printScores();
     free(player);
     exit(0);
 }
