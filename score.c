@@ -37,7 +37,7 @@ scoreEntry gameScore[10];
 BOOL loadScores()
 {
     int ncount, nscore;
-    char *cusername;
+    char *cusername, cscore[40];
 
     /* does the file exist? */
     fp = fopen("scores.dat", "rw");
@@ -58,7 +58,19 @@ BOOL loadScores()
         for (ncount = 0; ncount < 10; ncount++)
         {
             cusername = malloc(sizeof(char) * 80);
-            fscanf(fp, "%s\n%i\n", cusername, &nscore);
+            //fscanf(fp, "%s\n%i\n", cusername, &nscore);
+            fgets(cusername, 50, fp);
+            if (cusername[strlen(cusername) - 1] == '\n')
+                cusername[strlen(cusername) - 1] = '\0';
+            fgets(cscore, 20, fp);
+            if (cscore[strlen(cscore) - 1] == '\n')
+                cscore[strlen(cscore) - 1] = '\0';
+
+            printf("%s\n", &cscore);
+            //nscore = strtol(*cscore;
+            //use strtol or atoi() to convert cscore into nscore, kthx.
+            nscore = atoi(cscore);
+            printf("%i\n", nscore);
             gameScore[ncount].score = nscore;     // copy score to struct entry.
             strncpy(gameScore[ncount].username, cusername, 39);
             
@@ -129,9 +141,10 @@ BOOL addScore(char *player, int score)
     /* My thoughts: Make sure it's higher than the bottom score.
        If it is, replace bottom score with it.  Then run 
        sortScores(). */
-    
+    printf("Checking score.\n");
     if (score > gameScore[9].score)
     {
+        printf("Adding score.\n");
         gameScore[9].score = score;
         strncpy(gameScore[9].username, player, 39);
         sortScores();

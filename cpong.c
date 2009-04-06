@@ -102,6 +102,8 @@ int main(int argc, char *argv[])
     move(0, 5);
     printw("Balls: %d  Score: %d", balls, score);
 
+/* OMG the the Game Loop */
+
     do
     {
         c = ponginput();
@@ -184,8 +186,11 @@ int endgame()
         printf("Please enter your name, or press Enter to use \"%s\": ", player);
         fflush(stdout);
         fflush(stdin);
-        //fgets(scoreplayer, 40, stdin);
-        fscanf(stdin, "%s", scoreplayer);
+        fgets(scoreplayer, 40, stdin);
+        if (scoreplayer[strlen(scoreplayer) - 1] == '\n')
+        scoreplayer[strlen(scoreplayer) - 1] = '\0';
+        if (strlen(scoreplayer) == 0) strncpy(scoreplayer, player, sizeof(player));
+        //fscanf(stdin, "%39s", scoreplayer);
         addScore(scoreplayer, score);
         saveScores();
     }
@@ -228,7 +233,7 @@ int moveball(int delay)
     if (ball.x >= (maxline -3))
     {
         /*              if ((ball.y > (paddle.me +4)) || (ball.y < (paddle.me -4))) {
-                        miss();
+                        miss();   
                         } */
         /* if ball hits paddle */
         if ((ball.y <= (paddle.me +4)) && (ball.y >= (paddle.me -4)))
