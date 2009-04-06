@@ -66,11 +66,8 @@ BOOL loadScores()
             if (cscore[strlen(cscore) - 1] == '\n')
                 cscore[strlen(cscore) - 1] = '\0';
 
-            printf("%s\n", &cscore);
-            //nscore = strtol(*cscore;
             //use strtol or atoi() to convert cscore into nscore, kthx.
-            nscore = atoi(cscore);
-            printf("%i\n", nscore);
+            nscore = strtol(cscore, NULL, 10);
             gameScore[ncount].score = nscore;     // copy score to struct entry.
             strncpy(gameScore[ncount].username, cusername, 39);
             
@@ -141,10 +138,10 @@ BOOL addScore(char *player, int score)
     /* My thoughts: Make sure it's higher than the bottom score.
        If it is, replace bottom score with it.  Then run 
        sortScores(). */
-    printf("Checking score.\n");
+    //printf("Checking score.\n");
     if (score > gameScore[9].score)
     {
-        printf("Adding score.\n");
+        //printf("Adding score.\n");
         gameScore[9].score = score;
         strncpy(gameScore[9].username, player, 39);
         sortScores();
