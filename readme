@@ -1,4 +1,5 @@
 This requires the ncurses development package.  (Usually called ncurses-dev in GNU/Linux)
-For now, compile with:
-gcc -lcurses -o cpong cpong.c score.c
+
+To compile, try typing in: make
+to run, try: ./cpong
 

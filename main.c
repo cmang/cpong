@@ -4,8 +4,8 @@
  * for non-commercial use.  Commercial use may be granted through permission
  * from the author.
  * 
- * To compile with gcc:
- * gcc -lcurses -o cpong cpong.c
+ * To compile with gcc:  (Or use the Makefile by typing 'make')
+ * gcc -lcurses -o cpong main.c score.c
  * 
  *************************
  * greets: daed, loophole, tsilik, academician, #ansipunx, #kgb
@@ -203,7 +203,22 @@ int endgame()
 
 int newball()
 {
-    getmaxyx(stdscr, maxline, maxcol);
+    int tmaxline, tmaxcol; // temp values
+    //getmaxyx(stdscr, maxline, maxcol);
+    getmaxyx(stdscr, tmaxline, tmaxcol);
+    if ((tmaxline < 22) || (tmaxcol < 80))
+    {   
+        nocbreak();
+    //fflush(stdout);
+        refresh();
+        endwin();
+        fflush(stdout);
+        printf("Sorry, this game requires a terminal of at least 80 columns and 22 lines.\n");
+        fflush(stdin);
+        exit(1);
+    }
+    maxline = 22;
+    maxcol = 80;
     ball.x = (maxline /2);
     ball.y = (maxcol /2);
     ball.xdir = 1;
@@ -289,7 +304,7 @@ int drawboard(int maxline, int maxcol)
     a = 2;
     while (a != maxline)
     {
-        getmaxyx(stdscr, maxline, maxcol);
+        //getmaxyx(stdscr, maxline, maxcol);
         move(a, 0);
         printw("|");
         a++;
@@ -298,7 +313,7 @@ int drawboard(int maxline, int maxcol)
     b = maxcol;
     while (a != maxline)
     {
-        getmaxyx(stdscr, maxline, maxcol);
+        //getmaxyx(stdscr, maxline, maxcol);
         b = maxcol;
         move(a, maxcol -1);
         printw("|");
