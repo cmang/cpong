@@ -30,7 +30,7 @@ scoreEntry * getScores();           // return pointer to entire scoreboard?
 FILE *fp;
 char a[40];
 
-#define MYSCORE 3250
+#define SCOREFILE "/tmp/pong-scores.dat"
 
 scoreEntry gameScore[10];
 
@@ -40,12 +40,12 @@ BOOL loadScores()
     char *cusername, cscore[40];
 
     /* does the file exist? */
-    fp = fopen("scores.dat", "rw");
+    fp = fopen(SCOREFILE, "rw");
     if (fp == NULL)
     {
         //printf("Score file not found.\n");
         makeBoard();
-        fopen("scores.dat", "rw");
+        fopen(SCOREFILE, "rw");
     }
     //else printf("Score file found.\n");
     if (fp == NULL)
@@ -155,7 +155,7 @@ BOOL saveScores()
 {
     int ncount;
     //printf("Writing to scores.dat.\n");
-    fp = fopen("scores.dat", "w");
+    fp = fopen(SCOREFILE, "w");
     if (fp == NULL)
     {
         fclose(fp);
@@ -178,7 +178,7 @@ BOOL makeBoard()
     int ncount;
     /* Create a new file containing blank scoreboard records. */
     //printf("Creating scores.dat.\n");
-    fp = fopen("scores.dat", "w");
+    fp = fopen(SCOREFILE, "w");
     if (fp == NULL)
     {
         fclose(fp);

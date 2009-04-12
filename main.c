@@ -27,6 +27,7 @@
 #define DEFDELAY 75
 
 int maxline, maxcol, ch, c, edge, score, balls;
+unsigned int delay;
 char *player;
 
 struct pollfd pfd[1];
@@ -60,14 +61,16 @@ int moveball(int delay);
 int newball();
 int endgame();
 
+int testScoreForLevel();
+
 /* end of function prototypes */
 
 
 /* BEGIN main() FUNCTION */
 int main(int argc, char *argv[])
 {
-    unsigned int delay = DEFDELAY;
-    delay *= 1000;
+    delay = DEFDELAY;
+    delay *= 1000;   // 65 = 65000.  Lets increase it by.. 3000 every 300 points?
     score = 0;
     balls = NUMBALLS;
 
@@ -183,7 +186,11 @@ int endgame()
     {
         char scoreplayer[40];
         printf("A new high score!\n");
-        printf("Please enter your name, or press Enter to use \"%s\": ", player);
+        fflush(stdout);
+        fflush(stdin);
+        usleep(1000000);
+        printf("Please enter your name for the HighScores:");
+        printf("\n>> ");
         fflush(stdout);
         fflush(stdin);
         fgets(scoreplayer, 40, stdin);
@@ -254,6 +261,7 @@ int moveball(int delay)
         if ((ball.y <= (paddle.me +4)) && (ball.y >= (paddle.me -4)))
         {
             score += 50;
+            testScoreForLevel();
             move(0, 5);
             printw("Balls: %d  Score: %d", balls, score);
             ball.xdir = 1;
@@ -372,3 +380,14 @@ int pausegame()
     move(0,0);
     return 0;
 }
+
+int testScoreForLevel()
+{
+    if (score == 300 || score == 600 || score == 900 || score == 1200 || score == 1500                                                                    
+    || score == 1800 || score == 2100 || score == 2400 || score == 2700 || score == 3000) // first try                                                
+    {                                                                                                                                                     
+        delay = delay - 3000;                                                                                                                             
+    }                          
+    return 0;
+}
+
