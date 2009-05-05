@@ -26,7 +26,7 @@
 #define NUMBALLS 3
 #define DEFDELAY 75
 
-int maxline, maxcol, ch, c, edge, score, balls;
+int maxline, maxcol, ch, c, edge, score, balls, level;
 unsigned int delay;
 char *player;
 
@@ -72,6 +72,7 @@ int main(int argc, char *argv[])
     delay = DEFDELAY;
     delay *= 1000;   // 65 = 65000.  Lets increase it by.. 3000 every 300 points?
     score = 0;
+    level = 1;
     balls = NUMBALLS;
 
     /* parse command-line arguments */
@@ -103,7 +104,7 @@ int main(int argc, char *argv[])
     paddle.meline = (maxline -2);
     drawpaddle(paddle.me, paddle.meline);
     move(0, 5);
-    printw("Balls: %d  Score: %d", balls, score);
+    printw("Balls: %d  Score: %d      Level: %d", balls, score, level);
 
 /* OMG the the Game Loop */
 
@@ -263,7 +264,7 @@ int moveball(int delay)
             score += 50;
             testScoreForLevel();
             move(0, 5);
-            printw("Balls: %d  Score: %d", balls, score);
+            printw("Balls: %d  Score: %d      Level: %d", balls, score, level);
             ball.xdir = 1;
         }
     }
@@ -383,11 +384,12 @@ int pausegame()
 
 int testScoreForLevel()
 {
-    if (score == 300 || score == 600 || score == 900 || score == 1200 || score == 1500                                                                    
+    if (score == 300 || score == 600 || score == 900 || score == 1200 || score == 1500
     || score == 1800 || score == 2100 || score == 2400 || score == 2700 || score == 3000) // first try                                                
-    {                                                                                                                                                     
-        delay = delay - 3000;                                                                                                                             
-    }                          
+    {  
+        delay = delay - 3000;
+        level = level + 1;
+    }  
     return 0;
 }
 
