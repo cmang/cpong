@@ -54,6 +54,7 @@ struct moving
 /* function prototypes */
 
 int pausegame();
+int startmessage();
 int drawpaddle(int where, int line);
 int ponginput();
 int drawboard(int maxline, int maxcol);
@@ -105,6 +106,7 @@ int main(int argc, char *argv[])
     drawpaddle(paddle.me, paddle.meline);
     move(0, 5);
     printw("Balls: %d  Score: %d      Level: %d", balls, score, level);
+    startmessage();
 
 /* OMG the the Game Loop */
 
@@ -365,6 +367,22 @@ int drawpaddle(int where, int line)
     attroff(A_REVERSE);
     return 0;
 }
+
+int startmessage()
+{
+    move(0, (maxcol -39));
+    printw("Game starting - press any key to begin");
+    move(ball.x, ball.y);
+    printw("O");
+    move(0,0);
+    getch();
+    move(ball.x, (ball.y +1));
+    printw(" ");
+    move(0, (maxcol -39));
+    printw("                                      ");
+    move(0,0);                                                
+    return 0;                                                 
+}           
 
 int pausegame()
 {
