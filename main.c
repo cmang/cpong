@@ -61,7 +61,7 @@ int drawboard(int maxline, int maxcol);
 int moveball(int delay);
 int newball();
 int endgame();
-
+void clear_stream(FILE *in);
 int testScoreForLevel();
 
 /* end of function prototypes */
@@ -188,14 +188,17 @@ int endgame()
     if (testScore(score) == TRUE)       /* Score stuff.. test, add, etc. */
     {
         char scoreplayer[40];
-        printf("A new high score!\n");
-        fflush(stdout);
-        fflush(stdin);
+        printf("A new high score!\n(Press Enter to Continue)");
         usleep(1000000);
+        //getchar();
+        fflush(stdout);
+        // maybe we can send a ^U character to stdin here?
+        //rewind(stdin);      // or this .. no, it fails, too.  I'll make a
+        //while(getc(stdin) != '\n');      // clear stdin. :/
+        clear_stream(stdin);
         printf("Please enter your name for the HighScores:");
         printf("\n>> ");
         fflush(stdout);
-        fflush(stdin);
         fgets(scoreplayer, 40, stdin);
         if (scoreplayer[strlen(scoreplayer) - 1] == '\n')
         scoreplayer[strlen(scoreplayer) - 1] = '\0';
@@ -355,6 +358,12 @@ int ponginput()
             endgame(); }
             */
     return(0);
+}
+
+void clear_stream (FILE *in) // source: http://www.programmingforums.org/thread6247-3.html
+{
+  int c;
+  while ( ( c = fgetc ( in ) ) != EOF && c != '\n' );
 }
 
 int drawpaddle(int where, int line)
