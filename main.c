@@ -32,16 +32,14 @@ char *player;
 
 struct pollfd pfd[1];
 
-struct where
-{
+struct where {
     int me;
     int you;
     int meline;
     int youline;
 } paddle;
 
-struct moving
-{
+struct moving {
     int x;
     int y;
     int xdir;
@@ -52,7 +50,6 @@ struct moving
 
 
 /* function prototypes */
-
 int pausegame();
 int startmessage();
 int drawpaddle(int where, int line);
@@ -63,9 +60,6 @@ int newball();
 int endgame();
 void clear_stream(FILE *in);
 int testScoreForLevel();
-
-/* end of function prototypes */
-
 
 /* BEGIN main() FUNCTION */
 int main(int argc, char *argv[])
@@ -78,8 +72,7 @@ int main(int argc, char *argv[])
 
     /* parse command-line arguments */
     while ((ch = getopt(argc, argv, "d:b:h")) != -1)
-        switch (ch)
-        {
+        switch (ch) {
             case 'd':
                 delay = strtoul(optarg, NULL, 10);
                 if (delay < 1 || delay > 1000) errx(1, "invalid delay (1-1000)");
@@ -98,7 +91,13 @@ int main(int argc, char *argv[])
                 (void)fprintf(stderr, "usage: pong [-d delay] [-b balls]\nDefault delay %i, default number of balls 3\n", DEFDELAY);
                 exit(1);
         }
-    initscr(); clear(); cbreak(); refresh();                        
+    /* curses init stuff */
+    initscr();
+    clear();
+    cbreak();
+    refresh();
+    nodelay(stdscr, TRUE);
+    /* game init */
     newball();
     drawboard(maxline, maxcol);
     paddle.me = (maxcol /2);
@@ -108,27 +107,22 @@ int main(int argc, char *argv[])
     printw("Balls: %d  Score: %d      Level: %d", balls, score, level);
     startmessage();
 
-/* OMG the the Game Loop */
-
-    do
-    {
+    /* OMG the the Game Loop */
+    do {
         c = ponginput();
         if (c == 0) moveball(delay);
-        if (c == 'j')
-        {         /* move left */ /* should comment this block
+        if (c == 'j') {         /* move left */ /* should comment this block
                                                    someday? ... maybe.  these blocks suck,
                                                    but they're the meat of the paddle action */
             if (paddle.me <= 4) (edge = 2);
             if (paddle.me > 4) (edge = 1);
-            if (edge == 1)
-            {
+            if (edge == 1) {
                 paddle.me = (paddle.me -1);
                 drawpaddle(paddle.me, paddle.meline);
                 move(paddle.meline, (paddle.me +4));
                 printw(" ");
                 refresh();
-                if (paddle.me >4)
-                {
+                if (paddle.me >4) {
                     paddle.me -= 1;
                     drawpaddle (paddle.me, paddle.meline);  
                     move(paddle.meline, (paddle.me +4));
@@ -138,19 +132,16 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        if (c == 'k')
-        {         /* move right */
+        if (c == 'k') {         /* move right */
             if (paddle.me >= (maxcol -5)) (edge = 2);
             if (paddle.me < (maxcol -5)) (edge = 1);
-            if (edge == 1)
-            {
+            if (edge == 1) {
                 paddle.me = (paddle.me +1);
                 drawpaddle(paddle.me, paddle.meline);
                 move(paddle.meline, (paddle.me -4));
                 printw(" ");
                 refresh();
-                if (paddle.me < (maxcol -5))
-                {
+                if (paddle.me < (maxcol -5)) {
                     paddle.me += 1;
                     drawpaddle(paddle.me, paddle.meline);
                     move(paddle.meline, (paddle.me -4));
@@ -161,8 +152,7 @@ int main(int argc, char *argv[])
             }
         }
         if (c == 'p') pausegame();
-        if (c == 'q')
-        {         /* quit */
+        if (c == 'q') {         /* quit */
             endgame();
         }
     }
@@ -176,8 +166,7 @@ int main(int argc, char *argv[])
 
 /* end main */
 
-int endgame()
-{
+int endgame() {
     nocbreak();
     //fflush(stdout);
     refresh();
@@ -185,8 +174,7 @@ int endgame()
     fflush(stdout);
     loadScores();
     printf("\n%s quit with score of %d.\n", player, score); 
-    if (testScore(score) == TRUE)       /* Score stuff.. test, add, etc. */
-    {
+    if (testScore(score) == TRUE) {      /* Score stuff.. test, add, etc. */
         char scoreplayer[40];
         printf("A new high score!\n(Press Enter to Continue)");
         usleep(1000000);
@@ -214,15 +202,13 @@ int endgame()
     exit(0);
 }
 
-int newball()
-{
+int newball() {
     int tmaxline, tmaxcol; // temp values
     //getmaxyx(stdscr, maxline, maxcol);
     getmaxyx(stdscr, tmaxline, tmaxcol);
-    if ((tmaxline < 22) || (tmaxcol < 80))
-    {   
+    if ((tmaxline < 22) || (tmaxcol < 80)) {   
         nocbreak();
-    //fflush(stdout);
+        //fflush(stdout);
         refresh();
         endwin();
         fflush(stdout);
@@ -239,8 +225,7 @@ int newball()
     return 0;
 }
 
-int moveball(int delay)
-{
+int moveball(int delay) {
     move(ball.x, ball.y);
     printw("O");
     move(0, 0);
@@ -258,14 +243,12 @@ int moveball(int delay)
     refresh();
     if (ball.x == 2) ball.xdir = 2;
     /*      if (ball.x == (maxline -3)) ball.xdir = 1; */
-    if (ball.x >= (maxline -3))
-    {
+    if (ball.x >= (maxline -3)) {
         /*              if ((ball.y > (paddle.me +4)) || (ball.y < (paddle.me -4))) {
                         miss();   
                         } */
         /* if ball hits paddle */
-        if ((ball.y <= (paddle.me +4)) && (ball.y >= (paddle.me -4)))
-        {
+        if ((ball.y <= (paddle.me +4)) && (ball.y >= (paddle.me -4))) {
             score += 50;
             testScoreForLevel();
             move(0, 5);
@@ -273,8 +256,7 @@ int moveball(int delay)
             ball.xdir = 1;
         }
     }
-    if (ball.x >= (maxline -2))
-    {
+    if (ball.x >= (maxline -2)) {
         /*        if ((ball.y > (paddle.me +4)) || (ball.y < (paddle.me -4))) { */
         move(0, (maxcol -17));
         printw("Missed the ball");
@@ -296,17 +278,15 @@ int moveball(int delay)
     return 0;
 }
 
-int drawboard(int maxline, int maxcol)
-{
-    int a, b;
+int drawboard(int maxline, int maxcol) {
+    int a;
     const char helpshit[] = "j - left, k - right, p - pause, q - quit";
     player = malloc(strlen(getenv("USER")));
     strcpy(player, getenv("USER"));
     move(0,1);
     move(1,1);
     a = 0;
-    while (a != maxcol)
-    {
+    while (a != maxcol) {
         move(1, a);
         printw("_");
         a++;
@@ -316,19 +296,15 @@ int drawboard(int maxline, int maxcol)
     move(maxline -1, ((maxcol - sizeof(helpshit)) -2) );
     printw("%s", helpshit); 
     a = 2;
-    while (a != maxline)
-    {
+    while (a != maxline) {
         //getmaxyx(stdscr, maxline, maxcol);
         move(a, 0);
         printw("|");
         a++;
     }
     a = 2;
-    b = maxcol;
-    while (a != maxline)
-    {
+    while (a != maxline) {
         //getmaxyx(stdscr, maxline, maxcol);
-        b = maxcol;
         move(a, maxcol -1);
         printw("|");
         a++;
@@ -336,16 +312,12 @@ int drawboard(int maxline, int maxcol)
     return 0;
 }
 
-int ponginput()
-{
-    char c, d;
-    d = 0;
+int ponginput() {
+    char c;
     pfd[0].fd = 0;
     pfd[0].events = POLLIN; 
-    if ( (poll(pfd, 1, 0)) > 0)
-    {
-        if (pfd[0].events & POLLIN)
-        {
+    if ( (poll(pfd, 1, 0)) > 0) {
+        if (pfd[0].events & POLLIN) {
             move(0,0);
             c = (getch()); 
             move(0,0);
@@ -360,14 +332,12 @@ int ponginput()
     return(0);
 }
 
-void clear_stream (FILE *in) // source: http://www.programmingforums.org/thread6247-3.html
-{
+void clear_stream (FILE *in) { // source: http://www.programmingforums.org/thread6247-3.html
   int c;
   while ( ( c = fgetc ( in ) ) != EOF && c != '\n' );
 }
 
-int drawpaddle(int where, int line)
-{
+int drawpaddle(int where, int line) {
     move(line, (where -3));
     /*      printw("---+---"); */
     /*      printw("MMMXMMM"); */
@@ -377,8 +347,7 @@ int drawpaddle(int where, int line)
     return 0;
 }
 
-int startmessage()
-{
+int startmessage() {
     move(0, (maxcol -39));
     printw("Game starting - press any key to begin");
     move(ball.x, ball.y);
@@ -393,8 +362,7 @@ int startmessage()
     return 0;                                                 
 }           
 
-int pausegame()
-{
+int pausegame() {
     move(0, (maxcol -36));
     printw("Game Paused, press any key to resume");
     move(ball.x, ball.y);
@@ -409,14 +377,17 @@ int pausegame()
     return 0;
 }
 
-int testScoreForLevel()
-{
+int testScoreForLevel() {
     if (score == 300 || score == 600 || score == 900 || score == 1200 || score == 1500
-    || score == 1800 || score == 2100 || score == 2400 || score == 2700 || score == 3000) // first try                                                
+    || score == 1800 || score == 2100 || score == 2400 || score == 2700 || score == 3000 || score == 3500)  // level up every X points, 12 levels
     {  
-        delay = delay - 3000;
+        delay = delay - 2500;
         level = level + 1;
     }  
+
+    if (score == 1000 || score == 1500 || score == 2000 || score == 3000 || score == 3500 || score == 5000) {    // up to 6 free balls from score
+        balls = balls + 1;
+    }
     return 0;
 }
 
