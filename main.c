@@ -190,7 +190,11 @@ int endgame() {
         fgets(scoreplayer, 40, stdin);
         if (scoreplayer[strlen(scoreplayer) - 1] == '\n')
         scoreplayer[strlen(scoreplayer) - 1] = '\0';
-        if (strlen(scoreplayer) == 0) strncpy(scoreplayer, player, sizeof(player));
+        if (strlen(scoreplayer) == 0) {
+            /* Nothing entered, so use 'char *player,' which was taken from
+                environment $USER variable */
+            strncpy(scoreplayer, player, strlen(player));
+        }
         //fscanf(stdin, "%39s", scoreplayer);
         addScore(scoreplayer, score);
         saveScores();
@@ -313,17 +317,18 @@ int drawboard(int maxline, int maxcol) {
 }
 
 int ponginput() {
-    char c;
+    int c;
+    c = 0;
     pfd[0].fd = 0;
     pfd[0].events = POLLIN; 
     if ( (poll(pfd, 1, 0)) > 0) {
         if (pfd[0].events & POLLIN) {
             move(0,0);
-            c = (getch()); 
+            c = getch(); 
             move(0,0);
             printw(" ");
         }
-        return((int)c);
+        return(c);
     }
     /*      if (read(0, &c, 1) != 1) {
             printw("Received EOF, uncool.");
