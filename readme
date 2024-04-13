@@ -1,5 +1,0 @@
-This requires the ncurses development package.  (Usually called ncurses-dev in GNU/Linux)
-
-To compile, try typing in: make
-to run, try: ./cpong
-
