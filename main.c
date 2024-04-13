@@ -353,7 +353,9 @@ int startmessage() {
     move(ball.x, ball.y);
     printw("O");
     move(0,0);
+    wtimeout(stdscr, -1);
     getch();
+    wtimeout(stdscr, 0);
     move(ball.x, (ball.y +1));
     printw(" ");
     move(0, (maxcol -39));
@@ -368,7 +370,9 @@ int pausegame() {
     move(ball.x, ball.y);
     printw("O");
     move(0,0);
+    wtimeout(stdscr, -1);
     getch();
+    wtimeout(stdscr, 0);
     move(ball.x, (ball.y +1));
     printw(" ");
     move(0, (maxcol -36));
